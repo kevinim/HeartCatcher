@@ -1,18 +1,27 @@
 # Creating the screen
 
 MDScreen :
+
     md_bg_color : [50/255,78/255,120/255,1]
-    MDCard :
+
+    MDCard :  
         size_hint : None,None
-        size : 320,400
+        size : 360,600
         pos_hint : {"center_x":.5,"center_y":.5}
         elevation : 15
         md_bg_color : [40/255,65/255,100/255,1]
         padding : 20
         spacing : 30
-        orientation : "vertical"
+        orientation : "vertical"     
+        
+        Image:
+            source : 'app.png'
+            size_hint : (1,1)
+          
+        
         # Adding items to the card
         MDLabel :
+            id: login_label
             text : 'LOGIN'
             font_style : 'Overline'
             font_size : 30
@@ -21,6 +30,7 @@ MDScreen :
             height : self.texture_size[1]
             padding_y : 15
             color: 1, 1, 1, 1
+
         MDTextFieldRound :
             hint_text : "Username"
             icon_right : "account"
@@ -29,6 +39,7 @@ MDScreen :
             font_size : 20
             pos_hint : {"center_x":.5}
             color_active : [1,1,1,1]
+
         MDTextFieldRound :
             hint_text : "Password"
             icon_right : "eye-off"
@@ -38,10 +49,22 @@ MDScreen :
             pos_hint : {"center_x":.5}
             color_active : [1,1,1,1]
             password : True
+
         MDRoundFlatButton :
             text : 'SIGN-UP'
             pos_hint : {"center_x":.5}
             font_size : 15
+
+        MDRoundFlatButton :
+            text : 'CLEAR'
+            pos_hint : {"center_x":.5}
+            font_size : 15       
+
         Widget :
             size_hint_y : None
-            height : 30
+            height : 5
+
+    #MDRaisedButton :
+    #    text : 'Custom Bottom Sheet Open'
+    #    pos_hint : {'center_x':.5}
+    #    on_press : app.open_bottom_sheet()
