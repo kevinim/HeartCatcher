@@ -198,7 +198,7 @@ class LoginApp(MDApp):
             print((to_database))
             requests.patch(url = self.url,json = to_database)
             self.strng.get_screen('loginscreen').manager.current = 'loginscreen'
-    auth = '0QjlZHsBsviGEbNRPNPdMZwq5UDBI1B0qdg9Ogvd'
+    auth = '7CWlh4kuYDiKSsKoD1quK1tY5BW08BxpjXIgLc28'
 
     def login(self):
         loginEmail = self.strng.get_screen('loginscreen').ids.login_email.text
