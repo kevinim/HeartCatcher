@@ -14,8 +14,12 @@ from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.font_definitions import theme_font_styles
+from firebase import firebase
 import json
 import requests
+
+firebase = firebase.FirebaseApplication('https://cis9590-355fe-default-rtdb.firebaseio.com/', None)
+
 help_str = '''
 ScreenManager:
     WelcomeScreen:
@@ -254,6 +258,18 @@ ScreenManager:
 <ResultScreen>:
     name: 'resultscreen'
 
+    canvas.before:
+        Color:
+            rgba: 0.3,0.6,0.6,0.3
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    MDLabel:
+        text:'Prediction Model Result'
+        font_style:'H2'
+        halign:'center'
+        pos_hint: {'center_y':0.9}
 
 '''
 
@@ -346,11 +362,20 @@ class LoginApp(MDApp):
             self.dialog.open()
         else:
             print(bio_age,bio_work,bio_heartd)
-            bio_info = str({f'\{{"Age":\"{bio_age}\","Password":\"{bio_work}\","Username":\"{bio_heartd}\"}}'})
+            
+            bio_info = {
+                        'Age': bio_age,
+                        'Employment': bio_work,
+                        'HeartDisease': bio_heartd
+                        }
+            
+##          str({f'\"{signupEmail}\":{{"Age":\"{bio_age}\","Employment":\"{bio_work}\","HeartDisease":\"{bio_heartd}\"}}'})
+            ###str({f'\{{"Age":\"{bio_age}\","Password":\"{bio_work}\","Username":\"{bio_heartd}\"}}'})
 
-            to_database = json.loads(bio_info)
-            print((to_database))
-            requests.patch(url = self.bioUrl,json = to_database)
+            firebase.post('cis9590-355fe-default-rtdb/Biometrics', bio_info)
+##            to_database = json.loads(bio_info)
+##            print((to_database))
+##            requests.patch(url = self.bioUrl,json = to_database)
             self.strng.get_screen('resultscreen').manager.current = 'resultscreen'
     auth = '7CWlh4kuYDiKSsKoD1quK1tY5BW08BxpjXIgLc28'
 
