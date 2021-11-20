@@ -15,6 +15,7 @@ from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.font_definitions import theme_font_styles
 from firebase import firebase
+import pandas as pd
 import json
 import requests
 
@@ -373,6 +374,12 @@ class LoginApp(MDApp):
             ###str({f'\{{"Age":\"{bio_age}\","Password":\"{bio_work}\","Username":\"{bio_heartd}\"}}'})
 
             firebase.post('cis9590-355fe-default-rtdb/Biometrics', bio_info)
+            stroke_data = firebase.get('cis9590-355fe-default-rtdb/Stroke_Data/','')
+            stroke_data_df = pd.DataFrame(stroke_data)
+            print(stroke_data_df)
+            #stroke_data_df = pd.read_json(stroke_data)
+            #print(stroke_data_df)
+            #print(stroke_data)
 ##            to_database = json.loads(bio_info)
 ##            print((to_database))
 ##            requests.patch(url = self.bioUrl,json = to_database)
