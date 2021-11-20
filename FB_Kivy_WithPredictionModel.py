@@ -14,6 +14,7 @@ from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.font_definitions import theme_font_styles
+from kivy.properties import ObjectProperty, ListProperty, StringProperty, NumericProperty, BoundedNumericProperty
 from firebase import firebase
 import json
 import requests
@@ -26,10 +27,17 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import train_test_split
 
 df = pd.read_csv('healthcare-dataset-stroke-data.csv')
+firebase = firebase.FirebaseApplication('https://cis9590-355fe-default-rtdb.firebaseio.com/', None)
+
+###stroke_data = firebase.get('cis9590-355fe-default-rtdb/Stroke_Data/','')
+###df = pd.DataFrame(stroke_data)
+###df['bmi'] = df['bmi'].astype(float)
+###df['avg_glucose_level'] = df['avg_glucose_level'].astype(float)
+###df['age'] = pd.to_numeric(df['age'],errors='coerce')
             
 ##pre-processing
 #replace missing values in bmi column using using mean() imputation
-df["bmi"].fillna(df["bmi"].mean(),inplace=True)
+df['bmi'].fillna(df['bmi'].mean(),inplace=True)
 #drop rows with gender=other
 df.drop(df.index[df["gender"]=="Other"], inplace=True)
 #replace "children" values with "never_worked"
@@ -107,14 +115,6 @@ X_for_selected=X[['age',
                 'hypertension_1',
                 'work_type_Private']]
 
-##                [['bio_age',
-##                'bio_work',
-##                'bio_heartd',
-##                'bio_avgglu',
-##                'bio_married',
-##                'bio_hypert',
-##                'bio_privsec']]
-
 #splitting the new dataset with best selected features
 trainx, validx, trainy, validy= train_test_split(X_for_selected, y, test_size=0.30, random_state=1)
 #run naive Bayes
@@ -125,7 +125,7 @@ prediction_train_nb=nb.predict(validx)
 #predict probabilities
 pred_train_prob_nb = nb.predict_proba(validx)
 
-firebase = firebase.FirebaseApplication('https://cis9590-355fe-default-rtdb.firebaseio.com/', None)
+
 
 help_str = '''
 ScreenManager:
@@ -133,6 +133,7 @@ ScreenManager:
     MainScreen:
     LoginScreen:
     SignupScreen:
+    ResultScreen:
 
 <WelcomeScreen>:
 
@@ -391,9 +392,15 @@ ScreenManager:
 
     MDRaisedButton:
         text:'Submit'
-        size_hint: (0.3,0.1)
-        pos_hint: {'center_y':0.2, 'center_x':0.75}
+        size_hint: (0.13,0.07)
+        pos_hint: {'center_x':0.6,'center_y':0.2}
         on_press: app.biosubmit()
+
+    MDRaisedButton:
+        text:'Result'
+        size_hint: (0.13,0.07)
+        pos_hint: {'center_x':0.85,'center_y':0.2}
+        on_press: root.manager.current = 'resultscreen'
 
     MDLabel:
         id:biomet_info
@@ -404,9 +411,8 @@ ScreenManager:
         font_style:'H3'
         halign:'center'
 
-<FinalScreen>:
-
-    name:'finalscreen'
+<ResultScreen>:
+    name:'resultscreen'
 
     canvas.before:
         Color:
@@ -415,27 +421,12 @@ ScreenManager:
             pos: self.pos
             size: self.size
 
-    BoxLayout:
-        orientation: "vertical"
-        size: root.width, root.height
-        padding: 20
-        spacing: 30
-
-        Image:
-            source: 'app.png'
-            size_hint: (0.5,0.5)
-            pos_hint : {'center_x':0.5,'center_y':1.5}
-
-    MDLabel:
-        text:'Prediction Result'
-        font_style:'H1'
-        font_size : 50
-        halign:'center'
-        pos_hint: {'center_y':0.9}
-        color: [40/255,65/255,100/255,1]
+    Button:
+        text: 'Result'
+        font_size: 40
+        on_release: app.get()
 
 '''
-
 
 class WelcomeScreen(Screen):
     pass
@@ -443,21 +434,20 @@ class MainScreen(Screen):
     pass
 class LoginScreen(Screen):
     pass
-class FinalScreen(Screen):
-    pass
 class SignupScreen(Screen):
     pass
-
+class ResultScreen(Screen):
+    pass
 
 sm = ScreenManager()
 sm.add_widget(WelcomeScreen(name = 'loginscreen'))
 sm.add_widget(MainScreen(name = 'mainscreen'))
 sm.add_widget(LoginScreen(name = 'loginscreen'))
 sm.add_widget(SignupScreen(name = 'signupscreen'))
-sm.add_widget(FinalScreen(name = 'finalscreen'))
-
+sm.add_widget(ResultScreen(name = 'resultscreen'))
 
 class LoginApp(MDApp):
+
 
     def build(self):
         self.strng = Builder.load_string(help_str)
@@ -552,9 +542,6 @@ class LoginApp(MDApp):
                         }
 
             firebase.post('cis9590-355fe-default-rtdb/Biometrics', bio_info)            
-##            self.strng.get_screen('ResultScreen').manager.current = 'ResultScreen'
-
-
                     
             #work type
             if bio_work == "Y" :
@@ -598,32 +585,32 @@ class LoginApp(MDApp):
 ###            print(pred_user_output)
 ###            print(pred_user_output)
 
-            print(result[0][1])
+            result_info = {
+                            'Email': self.loginEmail,
+                            'Prediction_Result': result[0][1],
+                          }
 
-            self.strng.get_screen('FinalScreen').manager.current = 'finalscreen'
+            firebase.post('cis9590-355fe-default-rtdb/Result', result_info)
 
-        def show_result(self):
-            if not self.dialog:
-                self.dialog = MDDialog(
-                    text=result[0][1],
-                    buttons=[
-                        MDFlatButton(
-                            text="Confirmed",
-                            theme_text_color="Custom",
-                            text_color=self.theme_cls.primary_color,
-                        ),
-                    ],
-                )
-            self.dialog.open()
+            print("There is a", result[0][1], "% chance that the user will get a stroke.")
+            auth = '7CWlh4kuYDiKSsKoD1quK1tY5BW08BxpjXIgLc28'
+
+    urls = 'https://cis9590-355fe-default-rtdb.firebaseio.com/cis9590-355fe-default-rtdb/Result.json'
+    auth_key = '7CWlh4kuYDiKSsKoD1quK1tY5BW08BxpjXIgLc28'
+
+    def get(self):
+        request = requests.get(self.urls + '?auth=' + self.auth_key)
+        print(request.json())
 
 
-        auth = '7CWlh4kuYDiKSsKoD1quK1tY5BW08BxpjXIgLc28'
+##        data = json.loads(request.content.decode())           
+##        print(data)
+##        prediction = data['Prediction_Result']
+
 ##          str({f'\"{signupEmail}\":{{"Age":\"{bio_age}\","Employment":\"{bio_work}\","HeartDisease":\"{bio_heartd}\"}}'})
 ##            to_database = json.loads(bio_info)
 ##            print((to_database))
 ##            requests.patch(url = self.bioUrl,json = to_database)
-
-    
 
 
 LoginApp().run()
