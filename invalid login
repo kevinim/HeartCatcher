@@ -1,0 +1,13 @@
+def invalidLogin():
+    pop = Popup(title='Invalid Login',
+                  content=Label(text='Invalid username or password.'),
+                  size_hint=(None, None), size=(400, 400))
+    pop.open()
+
+
+def invalidForm():
+    pop = Popup(title='Invalid Form',
+                  content=Label(text='Please fill in all inputs with valid information.'),
+                  size_hint=(None, None), size=(400, 400))
+
+    pop.open()
