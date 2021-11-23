@@ -613,7 +613,8 @@ class LoginApp(MDApp):
 ##        self.strng.get_screen('resultscreen').ids.result_info.text = f"The result is {self.request}"
         dataset = requests.get(self.urls + '?auth=' + self.auth_key)
         ds2 = dataset.json()
-        self.strng.get_screen('resultscreen').ids.result_info.text = f"{ds2}"
+        ds3 = list(ds2)[-1]
+        self.strng.get_screen('resultscreen').ids.result_info.text = f"Your unique key is {ds3} Here's your result {ds2} %"
 
 
 LoginApp().run()
