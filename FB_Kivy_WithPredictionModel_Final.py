@@ -432,10 +432,17 @@ ScreenManager:
         text:'Result'
         size_hint: (0.13,0.07)
         font_size : 20
-        pos_hint: {'center_x':0.5,'center_y':0.05}
+        pos_hint: {'center_x':0.35,'center_y':0.1}
         on_press:
             app.get()
 
+    MDRaisedButton:
+        text: 'Another input?'
+        size_hint: (0.13,0.07)
+        pos_hint: {'center_x':0.65,'center_y':0.1}
+        on_press:
+            root.manager.current = 'mainscreen'
+            root.manager.transition.direction = 'up'
 
 '''
 
