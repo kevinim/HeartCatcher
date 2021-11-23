@@ -13,6 +13,7 @@ from kivy.uix.button import Button
 from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
+from kivy.uix.recycleview import RecycleView
 from kivymd.font_definitions import theme_font_styles
 from kivy.properties import ObjectProperty, ListProperty, StringProperty, NumericProperty, BoundedNumericProperty
 from firebase import firebase
@@ -421,10 +422,20 @@ ScreenManager:
             pos: self.pos
             size: self.size
 
-    Button:
-        text: 'Result'
-        font_size: 40
-        on_release: app.get()
+    MDLabel:
+        id:result_info
+        text:'Result Page'
+        font_style:'H3'
+        halign:'center'
+
+    MDRaisedButton:
+        text:'Result'
+        size_hint: (0.13,0.07)
+        font_size : 20
+        pos_hint: {'center_x':0.5,'center_y':0.05}
+        on_press:
+            app.get()
+
 
 '''
 
@@ -586,31 +597,23 @@ class LoginApp(MDApp):
 ###            print(pred_user_output)
 
             result_info = {
-                            'Email': self.loginEmail,
-                            'Prediction_Result': result[0][1],
+                           'Prediction_Result': result[0][1],
                           }
 
             firebase.post('cis9590-355fe-default-rtdb/Result', result_info)
+            print(result[0][1])
 
-            print("There is a", result[0][1], "% chance that the user will get a stroke.")
             auth = '7CWlh4kuYDiKSsKoD1quK1tY5BW08BxpjXIgLc28'
 
     urls = 'https://cis9590-355fe-default-rtdb.firebaseio.com/cis9590-355fe-default-rtdb/Result.json'
     auth_key = '7CWlh4kuYDiKSsKoD1quK1tY5BW08BxpjXIgLc28'
 
     def get(self):
-        request = requests.get(self.urls + '?auth=' + self.auth_key)
-        print(request.json())
-
-
-##        data = json.loads(request.content.decode())           
-##        print(data)
-##        prediction = data['Prediction_Result']
-
-##          str({f'\"{signupEmail}\":{{"Age":\"{bio_age}\","Employment":\"{bio_work}\","HeartDisease":\"{bio_heartd}\"}}'})
-##            to_database = json.loads(bio_info)
-##            print((to_database))
-##            requests.patch(url = self.bioUrl,json = to_database)
+##        request = requests.get(self.urls + '?auth=' + self.auth_key)
+##        self.strng.get_screen('resultscreen').ids.result_info.text = f"The result is {self.request}"
+        dataset = requests.get(self.urls + '?auth=' + self.auth_key)
+        ds2 = dataset.json()
+        self.strng.get_screen('resultscreen').ids.result_info.text = f"{ds2}"
 
 
 LoginApp().run()
