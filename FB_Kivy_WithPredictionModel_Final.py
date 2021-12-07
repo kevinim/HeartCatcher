@@ -39,6 +39,8 @@ stroke_data = firebase.get('cis9590-355fe-default-rtdb/Stroke_Data/','')
 df = pd.DataFrame(stroke_data)
 ##pre-processing
 #replace missing values in bmi column using using mean() imputation
+df['bmi'] = df['bmi'].replace("N/A", np.nan)
+df['bmi'] = df['bmi'].astype(float)
 df['bmi'].fillna(df['bmi'].mean(),inplace=True)
 #drop rows with gender=other
 df.drop(df.index[df["gender"]=="Other"], inplace=True)
