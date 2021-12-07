@@ -27,7 +27,7 @@ from imblearn.over_sampling import SMOTE
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import train_test_split
 
-df = pd.read_csv('healthcare-dataset-stroke-data.csv')
+#df = pd.read_csv('healthcare-dataset-stroke-data.csv')
 firebase = firebase.FirebaseApplication('https://cis9590-355fe-default-rtdb.firebaseio.com/', None)
 
 ###stroke_data = firebase.get('cis9590-355fe-default-rtdb/Stroke_Data/','')
@@ -35,7 +35,8 @@ firebase = firebase.FirebaseApplication('https://cis9590-355fe-default-rtdb.fire
 ###df['bmi'] = df['bmi'].astype(float)
 ###df['avg_glucose_level'] = df['avg_glucose_level'].astype(float)
 ###df['age'] = pd.to_numeric(df['age'],errors='coerce')
-            
+stroke_data = firebase.get('cis9590-355fe-default-rtdb/Stroke_Data/','')
+df = pd.DataFrame(stroke_data)
 ##pre-processing
 #replace missing values in bmi column using using mean() imputation
 df['bmi'].fillna(df['bmi'].mean(),inplace=True)
