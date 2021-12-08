@@ -30,18 +30,22 @@ def show_popup():
 
 if __name__ == "__main__":
     MyApp().run()
-<Widgets>:
-    Button:
-        text: "Close"
-        on_release: root.btn()
+    
+    
+    
+My.kv
+    <Widgets>:
+        Button:
+            text: "Close"
+            on_release: root.btn()
 
-<P>:
-    Label:
-        text: "You have logged out"
-        size_hint: 0.6, 0.2
-        pos_hint: {"x":0.2, "top":1}
+    <P>:
+        Label:
+            text: "You have logged out"
+            size_hint: 0.6, 0.2
+            pos_hint: {"x":0.2, "top":1}
 
-    Button:
-        text: "Back to login page"
-        size_hint: 0.8, 0.2
-        pos_hint: {"x":0.1, "y":0.1}
+        Button:
+            text: "Back to login page"
+            size_hint: 0.8, 0.2
+            pos_hint: {"x":0.1, "y":0.1}
