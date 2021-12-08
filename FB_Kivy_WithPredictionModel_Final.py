@@ -629,3 +629,4 @@ class LoginApp(MDApp):
         self.strng.get_screen('resultscreen').ids.result_info.text = f"There is a {ds4}% chance that the user will get a stroke"
 
 LoginApp().run()
+
