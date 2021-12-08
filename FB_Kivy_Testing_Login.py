@@ -370,6 +370,7 @@ class LoginApp(MDApp):
                         'HeartDisease': bio_heartd
                         }
             
+            
 ##          str({f'\"{signupEmail}\":{{"Age":\"{bio_age}\","Employment":\"{bio_work}\","HeartDisease":\"{bio_heartd}\"}}'})
             ###str({f'\{{"Age":\"{bio_age}\","Password":\"{bio_work}\","Username":\"{bio_heartd}\"}}'})
 
