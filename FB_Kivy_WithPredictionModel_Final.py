@@ -217,6 +217,7 @@ ScreenManager:
         pos_hint: {'center_y':0.4,'center_x':0.5}
         size_hint : (0.7,0.1)
         hint_text: 'Password'
+        password: True
         helper_text:'Required'
         helper_text_mode:  'on_error'
         icon_right: 'account'
