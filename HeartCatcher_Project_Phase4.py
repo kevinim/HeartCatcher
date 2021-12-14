@@ -37,6 +37,7 @@ firebase = firebase.FirebaseApplication('https://cis9590-355fe-default-rtdb.fire
 ###df['age'] = pd.to_numeric(df['age'],errors='coerce')
 stroke_data = firebase.get('cis9590-355fe-default-rtdb/Stroke_Data/','')
 df = pd.DataFrame(stroke_data)
+
 ##pre-processing
 #replace missing values in bmi column using using mean() imputation
 df['bmi'] = df['bmi'].replace("N/A", np.nan)
