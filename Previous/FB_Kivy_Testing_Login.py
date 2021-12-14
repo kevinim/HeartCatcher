@@ -158,6 +158,7 @@ ScreenManager:
         icon_right_color: app.theme_cls.primary_color
         required: True
         mode: "rectangle"
+        
     MDTextField:
         id:signup_username
         pos_hint: {'center_y':0.75,'center_x':0.5}
