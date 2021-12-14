@@ -139,7 +139,6 @@ if work_type_Never_worked == "Y" :
 elif work_type_Never_worked == "N" :
     work_type_Never_worked = 1
 
-
 #heart disease
 heart_disease_1 = input("Do you have any heart disease? (Y/N): ")
 if heart_disease_1 == "Y":
