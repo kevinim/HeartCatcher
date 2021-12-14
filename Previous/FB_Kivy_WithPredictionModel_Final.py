@@ -78,6 +78,7 @@ def remove_outliers(data):
         else:
             outliers.append(x)
     return outliers
+
 #removing outliers
 df["bmi"] = remove_outliers(df['bmi'])
 df["avg_glucose_level"] = remove_outliers(df["avg_glucose_level"])
