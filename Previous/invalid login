@@ -5,6 +5,7 @@ def invalidLogin():
     pop.open()
 
 
+
 def invalidForm():
     pop = Popup(title='Invalid Form',
                   content=Label(text='Please fill in all inputs with valid information.'),
